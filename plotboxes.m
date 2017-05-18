@@ -1,6 +1,4 @@
-close all; 
-clear all; 
-clc; 
+clear all; close all; clc;  
 
 % Plots grip force trace for each trial and sorts into 2, 5 and 10 second
 % trials. 
@@ -27,101 +25,43 @@ z = randperm(length(v));
 run1 = v(z);
 
 
-time2 = cell(1,15);
-time5 = cell(1,15);
-time10 = cell(1,15);
+time = cell(3,15);
+y = cell(3,15);
 a= 1; 
 b = 1; 
 c = 1; 
 
-% Sort out time data into 2, 5 and 10 second runs
-ii = 1; 
+% Sort out time and force data into 2, 5 and 10 second runs
+ii = 1;
 for ii = 1:length(run1)
-    if run1(ii) == 2 
-        time2{a} = t_data{1,ii};
+    if run1(ii) == 2
+        time{1,a} = t_data{1,ii};
+        y{1,a} = y_data{1,ii};
         a = a+1;
     elseif run1(ii) == 5
-        time5{b} = t_data{1,ii}; 
+        time{2,b} = t_data{1,ii};
+        y{2,b} = y_data{1,ii};
         b = b+1;
     elseif run1(ii) == 10
-        time10{c} = t_data{1,ii}; 
+        time{3,c} = t_data{1,ii};
+        y{3,c} = y_data{1,ii};
         c=c+1;
     end
 end
 
-y2 = cell(1,15);
-y5 = cell(1,15);
-y10 = cell(1,15);
-a= 1; 
-b = 1; 
-c = 1; 
-
-% Do same for y data
-ii = 1; 
-for ii = 1:length(run1)
-    if run1(ii) == 2 
-        y2{a} = y_data{1,ii};
-        a = a+1;
-    elseif run1(ii) == 5
-        y5{b} = y_data{1,ii}; 
-        b = b+1;
-    elseif run1(ii) == 10
-        y10{c} = y_data{1,ii}; 
-        c=c+1;
-    end
-end
-  
-figure('Name','2s','NumberTitle','off')
+names = [2 5 10];
 
 % Make subplots of all the trials for each duration 
 % Will need to edit ylim for each subject
 
-for k = 1:15; 
-   
-     subplot(3,5,k)
-    %figure(k)
-    plot(nonzeros(time2{1,k}),nonzeros(y2{1,k})*-1)
-   % ylim([-30000, -10000])
-   % ylim([-12500, -9000])
-     title(['2s: ',num2str(k)])
-      bsln = mean (y2{1,k}(1:50));
-   mvf30 = mean (y2{1,k}(111:160));
-forces2(k) = bsln - mvf30;
-end 
-
-figure('Name','5s','NumberTitle','off')
-
-for k = 1:15;
-   
-    subplot(3,5,k)
-    plot(nonzeros(time5{1,k}),nonzeros(y5{1,k})*-1)
-    %ylim([-30000, -10000])
-    %ylim([-12500, -9000])
-     title(['5s: ',num2str(k)])
-      bsln = mean (y5{1,k}(1:50));
-   mvf30 = mean (y5{1,k}(111:160));
-forces5(k) = bsln - mvf30;
-end 
-figure('Name','10s','NumberTitle','off')
-
-for k = 1:15;
-    
-    subplot(3,5,k)
-    plot(nonzeros(time10{1,k}),nonzeros(y10{1,k})*-1)
-   % ylim([-30000, -10000])
-    %ylim([-12500, -9000])
-    title(['10s: ',num2str(k)])
-     bsln = mean (y10{1,k}(1:50));
-   mvf30 = mean (y10{1,k}(111:160));
-forces10(k) = bsln - mvf30;
-end 
-
-
-% I don't know what this is for 
-diff2 = forces2-4228.8;
-diff5= forces5-4228.8;
-diff10= forces10-4228.8;
-
-mean(abs(diff2))
-mean(abs(diff5))
-mean(abs(diff10))
+for j = 1:3
+    figure('Name',[num2str(names(j)),'s'],'NumberTitle','off')
+    for k = 1:15
+        subplot(3,5,k)
+        plot(nonzeros(time{j,k}),nonzeros(y{j,k})*-1)
+        %ylim([-30000, -10000])
+        title([num2str(names(j)),'s: ',num2str(k)])
+        bsln = mean (y{j,k}(1:50));
+        mvf30 = mean (y{j,k}(111:160));
+    end
+end
